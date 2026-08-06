@@ -19,6 +19,8 @@
   },
   "homepage": "https://github.com/giiovannie/practica-task-ivan-gomez#readme",
   "dependencies": {
-    "express": "^5.2.1"
+    "express": "^5.2.1",
+    "mysql2": "^3.23.2",
+    "sequelize": "^6.37.8"
   }
 }

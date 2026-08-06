@@ -3,12 +3,6 @@ import { DataTypes } from "sequelize";
 
 export const TableUser = sequelize.define("User", 
     {
-        id: { 
-            type: DataTypes.INTEGER,
-            primaryKey: true,
-            autoIncrement: true,
-            allowNull: false
-        },
         name: {
             type: DataTypes.STRING(100),
             allowNull:false

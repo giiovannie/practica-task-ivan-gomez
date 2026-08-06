@@ -1,0 +1,24 @@
+{
+  "name": "practica-task-ivan-gomez",
+  "version": "1.0.0",
+  "description": "Practica inicial del segundo cuatrimestre",
+  "main": "app.js",
+  "scripts": {
+    "dev": "node --watch app.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/giiovannie/practica-task-ivan-gomez.git"
+  },
+  "keywords": [],
+  "author": "giovannieDev",
+  "license": "ISC",
+  "type": "module",
+  "bugs": {
+    "url": "https://github.com/giiovannie/practica-task-ivan-gomez/issues"
+  },
+  "homepage": "https://github.com/giiovannie/practica-task-ivan-gomez#readme",
+  "dependencies": {
+    "express": "^5.2.1"
+  }
+}

@@ -1,7 +1,7 @@
 import { json } from "sequelize";
 import { TableUser } from "../models/User-model.js";
 
-const MESSAGES = {
+export const MESSAGES = {
   200: "La operación se realizó correctamente.",
   201: "El recurso fue creado exitosamente.",
   400: "Solicitud inválida. Verificá que todos los campos estén completos y sean correctos.",
@@ -97,3 +97,23 @@ export const updateUser = async (req,res) => {
     return res.status(500).json(MESSAGES[500]);
   }
 };
+
+//esto va con el metodo delete
+export const eliminarUser = async(req,res)=>{
+    try {
+        const { id } = req.params;
+
+        const usuarioAborrar = await TableUser.findOne(
+            {where: {id}}
+        )
+
+        if(!usuarioAborrar) return res.status(404).json(MESSAGES[404]);
+
+        await usuarioAborrar.destroy()
+
+        return res.status(200).json({message:"SE BORRO EXITOSAMENTE EL USUARIO DE LA BASE DE DATOS"})
+
+    } catch (error) {
+        return res.status(500).json(MESSAGES[500])
+    }
+}

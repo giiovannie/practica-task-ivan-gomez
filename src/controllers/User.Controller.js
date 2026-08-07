@@ -31,6 +31,7 @@ export const crearUser = async (req, res) => {
         .status(400)
         .json({ messages: `el correo electronico ingresado "YA EXISTE"` });
     }
+
     const userNuevo = await TableUser.create({
       name,
       email,
@@ -69,3 +70,30 @@ export const obtenerUser = async (req, res) => {
 
 // nota para mi: el id que nesecitamos compara simpre viene de req que tiene guardo en la propiedad params
 
+//esto debe ir con el metodo put
+
+export const updateUser = async (req,res) => {
+  try {
+    const { id } = req.params;
+    const filtroUser = await TableUser.findOne({ where: { id } });
+
+    if (!filtroUser) return res.status(404).json(MESSAGES[404]);
+
+    const { name, email, password } = req.body;
+
+    if (!name || !email || !password) {
+      return res.status(400).json(MESSAGES[400]);
+    }
+
+    if (name.length > 100 || email.length > 100 || password.length > 100) {
+      return res.status(400).json(MESSAGES[400]);
+    }
+
+    const actualizarUser = await TableUser.update( {name,email,password}, {where: { id }})
+
+    return res.status(200).json(actualizarUser)
+
+  } catch (error) {
+    return res.status(500).json(MESSAGES[500]);
+  }
+};

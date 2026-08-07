@@ -8,7 +8,7 @@ export const sequelize = new Sequelize("tasks_users_db","root","", {
 export const DataBaseUp = async ()=>{
     try {
         await sequelize.authenticate();
-        await sequelize.sync({force: true})
+        await sequelize.sync()
         console.log("conexion a la base de datos exitosa :)");
     } catch (error) {
         console.log(`lo sentimos ocurrio un error con la base de datos

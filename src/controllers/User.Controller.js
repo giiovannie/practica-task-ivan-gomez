@@ -1,4 +1,3 @@
-import { json } from "sequelize";
 import { TableUser } from "../models/User-model.js";
 
 export const MESSAGES = {

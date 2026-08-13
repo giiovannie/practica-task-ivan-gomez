@@ -1,4 +1,4 @@
-import { TableUser } from "../models/User-model.js";
+import { UserModel } from "../models/User.js";
 
 export const MESSAGES = {
   200: "La operación se realizó correctamente.",

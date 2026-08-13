@@ -1,5 +1,5 @@
 import { Router } from "express";
-import { actualizarTarea, agreguaTarea, eliminarTarea, mostrarTarea, mostrarTareas } from "../controllers/Task.Controller.js";
+import { actualizarTarea, agreguaTarea, eliminarTarea, mostrarTarea, mostrarTareas } from "../controllers/task.Controller.js";
 
 export const TaskRouter = Router();
 

@@ -1,5 +1,5 @@
-import { TableTask } from "../models/Task-model.js";
-import { MESSAGES } from "../controllers/User.Controller.js"
+import { TaskModel } from "../models/Task.js";
+import { MESSAGES } from "./user.Controller.js"
 
 export const agreguaTarea = async(req,res)=>{
     try {

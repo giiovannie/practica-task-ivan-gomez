@@ -1,7 +1,7 @@
 import { DataTypes } from "sequelize";
-import { sequelize } from "../config/DataBase.js";
+import { sequelize } from "../config/database.js";
 
-export const TableTask = sequelize.define("Task",
+export const TaskModel = sequelize.define("Task",
     {
         title: {
             type: DataTypes.STRING(100),

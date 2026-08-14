@@ -6,7 +6,7 @@ export const getAllWays = async (req,res)=>{
     try {
         const direcciones  = await DireccionModel.findAll({
             attributes: {
-                exclude: ["user_id", "createdAt", "updateAt"]
+                exclude: ["user_id", "createdAt", "updatedAt", "password"]
             },
             include: {
                 model: UserModel, as: "author"
@@ -31,7 +31,7 @@ export const getAlWaysId = async (req,res)=>{
                     model: UserModel, as: "author"
                 },
                 attributes: {
-                    exclude: ["user_id", "createdAt", "updateAt"]
+                    exclude: ["user_id", "createdAt", "updatedAt", "password"]
                 }
             }
         )

@@ -17,13 +17,13 @@ export const agreguaTarea = async(req,res)=>{
             return res.status(400).json(MESSAGES[400]);
         }
 
-        const coincidencias = await TableTask.findOne({ where: { title } });
+        const coincidencias = await TaskModel.findOne({ where: { title } });
 
         if (coincidencias) {
             return res.status(400).json({ message: "El título de la tarea ya existe." });
         }
 
-        const tareaNueva = await TableTask.create(
+        const tareaNueva = await TaskModel.create(
             {
                 title,
                 description,
@@ -34,6 +34,7 @@ export const agreguaTarea = async(req,res)=>{
         return res.status(201).json(tareaNueva)
 
     } catch (error) {
+        console.error(error);
         return res.status(500).json(MESSAGES[500])
     }
 }
@@ -41,9 +42,10 @@ export const agreguaTarea = async(req,res)=>{
 
 export const mostrarTareas = async (req,res) => {
     try {
-        const tareas = await TableTask.findAll();
+        const tareas = await TaskModel.findAll();
         return res.status(200).json(tareas)
     } catch (error) {
+        console.error(error);
         return res.status(500).json(MESSAGES[500])
     }
 }
@@ -51,7 +53,7 @@ export const mostrarTareas = async (req,res) => {
 export const mostrarTarea = async (req,res) => {
     try {
         const { id } = req.params;
-        const tareaEncontrada = await TableTask.findOne(
+        const tareaEncontrada = await TaskModel.findOne(
             {where: { id }}
         )
 
@@ -59,6 +61,7 @@ export const mostrarTarea = async (req,res) => {
 
         return res.status(200).json(tareaEncontrada)
     } catch (error) {
+        console.error(error);
         return res.status(500).json(MESSAGES[500])
     }
 }
@@ -66,7 +69,7 @@ export const mostrarTarea = async (req,res) => {
 export const actualizarTarea = async (req, res) => {
     try {
         const { id } = req.params;
-        const tareaEncontrada = await TableTask.findOne({ where: { id } });
+        const tareaEncontrada = await TaskModel.findOne({ where: { id } });
 
         if (!tareaEncontrada) return res.status(404).json(MESSAGES[404]);
 
@@ -76,12 +79,13 @@ export const actualizarTarea = async (req, res) => {
         if (title.length > 100 || description.length > 100) return res.status(400).json(MESSAGES[400]);
         if (typeof isComplete !== "boolean") return res.status(400).json(MESSAGES[400]);
 
-        await TableTask.update({ title, description, isComplete }, { where: { id } });
+        await TaskModel.update({ title, description, isComplete }, { where: { id } });
 
-        const tareaActualizada = await TableTask.findOne({ where: { id } });
+        const tareaActualizada = await TaskModel.findOne({ where: { id } });
         return res.status(200).json(tareaActualizada);
 
     } catch (error) {
+        console.error(error);
         return res.status(500).json(MESSAGES[500]);
     }
 };
@@ -89,7 +93,7 @@ export const actualizarTarea = async (req, res) => {
 export const eliminarTarea = async (req, res) => {
     try {
         const { id } = req.params;
-        const tareaEncontrada = await TableTask.findOne({ where: { id } });
+        const tareaEncontrada = await TaskModel.findOne({ where: { id } });
 
         if (!tareaEncontrada) return res.status(404).json(MESSAGES[404]);
 
@@ -97,6 +101,7 @@ export const eliminarTarea = async (req, res) => {
         return res.status(200).json({ message: "Tarea eliminada exitosamente." });
 
     } catch (error) {
+        console.error(error);
         return res.status(500).json(MESSAGES[500]);
     }
 };

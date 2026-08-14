@@ -1,5 +1,5 @@
 import { UserModel } from "../models/User.js";
-import TaskModel from "../models/Task.js.js" // nota para mi : a pesar de que ya relacione los modelos debo igual importar los modelos aca al tarer referencias con los endpoints
+import { TaskModel } from "../models/Task.js" // nota para mi : a pesar de que ya relacione los modelos debo igual importar los modelos aca al tarer referencias con los endpoints
 
 export const MESSAGES = {
   200: "La operación se realizó correctamente.",
@@ -50,7 +50,7 @@ export const obtenerUsers = async (req, res) => {
   try {
     const users = await UserModel.findAll({
       attributes:{
-        exclude: ["id", "password"]
+        exclude: ["user_id", "password", "createdAt", "updateAt"]
       },
       include: [
         {model: TaskModel, as: "tarea"}
@@ -67,7 +67,7 @@ export const obtenerUsers = async (req, res) => {
 export const obtenerUser = async (req, res) => {
   try {
     const { id } = req.params;
-    const userEncontrado = await UserModel.findOne({ where: { id }, attributes:{ exclude:["id", "password"] }, include: [{model: TaskModel, as: "tarea"}] });
+    const userEncontrado = await UserModel.findOne({ where: { id }, attributes:{ exclude:["user_id", "password", "createdAt", "updatedAt"] }, include: [{model: TaskModel, as: "tarea"}] });
 
     if (!userEncontrado) return res.status(404).json(MESSAGES[404]);
 

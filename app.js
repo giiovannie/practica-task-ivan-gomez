@@ -2,6 +2,7 @@ import express from "express"
 import { DataBaseUp } from "./src/config/database.js";
 import { UserRoutes } from "./src/routes/user.route.js";
 import { TaskRouter } from "./src/routes/task.routes.js";
+import "./src/models/index.js";
 
 import dotenv from "dotenv";
 dotenv.config();

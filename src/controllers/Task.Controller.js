@@ -1,11 +1,12 @@
 import { TaskModel } from "../models/Task.js";
-import { MESSAGES } from "./user.Controller.js"
+import { UserModel } from "../models/User.js";
+import { MESSAGES } from "../controllers/User.Controller.js"
 
 export const agreguaTarea = async(req,res)=>{
     try {
-        const {title, description , isComplete} = req.body;
+        const {title, description , isComplete, user_id} = req.body;
 
-        if (!title || !description) {
+        if (!title || !description || !user_id) {
             return res.status(400).json(MESSAGES[400]);
         }
 
@@ -17,8 +18,12 @@ export const agreguaTarea = async(req,res)=>{
             return res.status(400).json(MESSAGES[400]);
         }
 
-        const coincidencias = await TaskModel.findOne({ where: { title } });
+        const usuarioExiste = await UserModel.findOne({ where: { id: user_id } });
+        if (!usuarioExiste) {
+            return res.status(404).json({ message: "El usuario no existe." });
+        }
 
+        const coincidencias = await TaskModel.findOne({ where: { title } })
         if (coincidencias) {
             return res.status(400).json({ message: "El título de la tarea ya existe." });
         }
@@ -27,7 +32,8 @@ export const agreguaTarea = async(req,res)=>{
             {
                 title,
                 description,
-                isComplete
+                isComplete,
+                user_id
             }
         )
 
@@ -42,7 +48,15 @@ export const agreguaTarea = async(req,res)=>{
 
 export const mostrarTareas = async (req,res) => {
     try {
-        const tareas = await TaskModel.findAll();
+        const tareas = await TaskModel.findAll({
+            include:[{
+                model: UserModel,
+                as: "Destinatario",
+                attributes: {
+                    exclude: ["password", "user_id"]
+                }
+            }]
+        });
         return res.status(200).json(tareas)
     } catch (error) {
         console.error(error);
@@ -53,8 +67,16 @@ export const mostrarTareas = async (req,res) => {
 export const mostrarTarea = async (req,res) => {
     try {
         const { id } = req.params;
-        const tareaEncontrada = await TaskModel.findOne(
-            {where: { id }}
+        const tareaEncontrada = await TaskModel.findOne({
+            where: { id },
+            include:{
+                model: UserModel,
+                as: "Destinatario", // nota para mi: este debe ser igual a la relacion que hice en el index
+                attributes: {
+                    exclude: ["password", "user_id"]
+                }
+            }
+        }
         )
 
         if(!tareaEncontrada) return res.status(404).json(MESSAGES[404])

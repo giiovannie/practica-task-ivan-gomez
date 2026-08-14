@@ -1,4 +1,5 @@
 import { UserModel } from "../models/User.js";
+import { TaskModel } from "../models/Task.js" // nota para mi : a pesar de que ya relacione los modelos debo igual importar los modelos aca al tarer referencias con los endpoints
 
 export const MESSAGES = {
   200: "La operación se realizó correctamente.",
@@ -21,7 +22,7 @@ export const crearUser = async (req, res) => {
     if (name.length > 100 || email.length > 100 || password.length > 100) {
       return res.status(400).json(MESSAGES[400]);
     }
-    const coincidencias = await TableUser.findOne({
+    const coincidencias = await UserModel.findOne({
       where: { email },
     });
     //validacion para verificar si existe concidencias antes de agregar algo
@@ -31,13 +32,14 @@ export const crearUser = async (req, res) => {
         .json({ messages: `el correo electronico ingresado "YA EXISTE"` });
     }
 
-    const userNuevo = await TableUser.create({
+    const userNuevo = await UserModel.create({
       name,
       email,
       password,
     });
     return res.status(201).json(userNuevo);
   } catch (error) {
+    console.error(error);
     res.status(500).json(MESSAGES[500]);
   }
 };
@@ -46,9 +48,17 @@ export const crearUser = async (req, res) => {
 
 export const obtenerUsers = async (req, res) => {
   try {
-    const users = await TableUser.findAll();
+    const users = await UserModel.findAll({
+      attributes:{
+        exclude: ["user_id", "password", "createdAt", "updateAt"]
+      },
+      include: [
+        {model: TaskModel, as: "tarea"}
+      ]
+    });
     return res.status(200).json(users);
   } catch (error) {
+    console.error(error);
     return res.status(500).json(MESSAGES[500]);
   }
 };
@@ -57,12 +67,13 @@ export const obtenerUsers = async (req, res) => {
 export const obtenerUser = async (req, res) => {
   try {
     const { id } = req.params;
-    const userEncontrado = await TableUser.findOne({ where: { id } });
+    const userEncontrado = await UserModel.findOne({ where: { id }, attributes:{ exclude:["user_id", "password", "createdAt", "updatedAt"] }, include: [{model: TaskModel, as: "tarea"}] });
 
     if (!userEncontrado) return res.status(404).json(MESSAGES[404]);
 
     return res.status(201).json(userEncontrado);
   } catch (error) {
+    console.error(error)
     return res.status(500).json(MESSAGES[500]);
   }
 };
@@ -74,7 +85,7 @@ export const obtenerUser = async (req, res) => {
 export const updateUser = async (req,res) => {
   try {
     const { id } = req.params;
-    const filtroUser = await TableUser.findOne({ where: { id } });
+    const filtroUser = await UserModel.findOne({ where: { id } });
 
     if (!filtroUser) return res.status(404).json(MESSAGES[404]);
 
@@ -88,11 +99,12 @@ export const updateUser = async (req,res) => {
       return res.status(400).json(MESSAGES[400]);
     }
 
-    const actualizarUser = await TableUser.update( {name,email,password}, {where: { id }})
+    const actualizarUser = await UserModel.update( {name,email,password}, {where: { id }})
 
     return res.status(200).json(actualizarUser)
 
   } catch (error) {
+    console.error(error)
     return res.status(500).json(MESSAGES[500]);
   }
 };
@@ -102,7 +114,7 @@ export const eliminarUser = async(req,res)=>{
     try {
         const { id } = req.params;
 
-        const usuarioAborrar = await TableUser.findOne(
+        const usuarioAborrar = await UserModel.findOne(
             {where: {id}}
         )
 
@@ -113,6 +125,7 @@ export const eliminarUser = async(req,res)=>{
         return res.status(200).json({message:"SE BORRO EXITOSAMENTE EL USUARIO DE LA BASE DE DATOS"})
 
     } catch (error) {
+      console.error(error);
         return res.status(500).json(MESSAGES[500])
     }
 }

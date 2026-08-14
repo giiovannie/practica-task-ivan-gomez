@@ -2,6 +2,8 @@ import express from "express"
 import { DataBaseUp } from "./src/config/database.js";
 import { UserRoutes } from "./src/routes/user.route.js";
 import { TaskRouter } from "./src/routes/task.routes.js";
+import { direccionRoutes } from "./src/routes/direcciones.routes.js";
+import "./src/models/index.js";
 
 import dotenv from "dotenv";
 dotenv.config();
@@ -11,6 +13,8 @@ const app = express();
 app.use(express.json());
 app.use("/api/users", UserRoutes)
 app.use("/api/tasks", TaskRouter)
+
+app.use("/api/direcciones", direccionRoutes)
 
 
 let port = process.env.PORT;

@@ -1,6 +1,11 @@
-import { TableTask } from "./Task.js";
-import { TableUser } from "./User.js";
+import { DireccionModel } from "./Direccion.js";
+import { TaskModel } from "./Task.js";
+import {  UserModel } from "./User.js";
 
-TableTask.belongsTo(TableUser , {foreignKey: "user_id"});
-TableUser.hasMany(TableTask, {foreignKey: "user_id"})
+//uno a muchos
+TaskModel.belongsTo(UserModel , {foreignKey: "user_id", as: "Destinatario"});
+UserModel.hasMany(TaskModel, {foreignKey: "user_id", as: "tarea"})
 
+//uno a uno
+DireccionModel.belongsTo(UserModel, {foreignKey: "user_id", as: "author"});
+UserModel.hasOne(DireccionModel, {foreignKey: "user_id", as: "ubicacion"})

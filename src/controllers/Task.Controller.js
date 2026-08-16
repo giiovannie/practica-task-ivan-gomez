@@ -1,6 +1,7 @@
 import { TaskModel } from "../models/Task.js";
 import { UserModel } from "../models/User.js";
 import { MESSAGES } from "../controllers/User.Controller.js"
+import { CategoryModel } from "../models/Category.js";
 
 export const agreguaTarea = async(req,res)=>{
     try {
@@ -49,13 +50,19 @@ export const agreguaTarea = async(req,res)=>{
 export const mostrarTareas = async (req,res) => {
     try {
         const tareas = await TaskModel.findAll({
-            include:[{
-                model: UserModel,
-                as: "Destinatario",
-                attributes: {
-                    exclude: ["password", "user_id"]
+            include:[
+                {
+                    model: UserModel,
+                    as: "Destinatario",
+                    attributes: {
+                        exclude: ["password", "user_id"]
+                    }
+                },
+                {
+                    model: CategoryModel,
+                    as: "categoria"
                 }
-            }]
+        ]
         });
         return res.status(200).json(tareas)
     } catch (error) {
@@ -69,13 +76,19 @@ export const mostrarTarea = async (req,res) => {
         const { id } = req.params;
         const tareaEncontrada = await TaskModel.findOne({
             where: { id },
-            include:{
-                model: UserModel,
-                as: "Destinatario", // nota para mi: este debe ser igual a la relacion que hice en el index
-                attributes: {
-                    exclude: ["password", "user_id"]
+            include:[
+                {
+                    model: UserModel,
+                    as: "Destinatario", // nota para mi: este debe ser igual a la relacion que hice en el index
+                    attributes: {
+                            exclude: ["password", "user_id"]
+                        }
+                },
+                {
+                    model: CategoryModel,
+                    as: "categoria"
                 }
-            }
+            ]
         }
         )
 

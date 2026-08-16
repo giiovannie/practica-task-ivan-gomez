@@ -1,5 +1,6 @@
 import { UserModel } from "../models/User.js";
-import { TaskModel } from "../models/Task.js" // nota para mi : a pesar de que ya relacione los modelos debo igual importar los modelos aca al tarer referencias con los endpoints
+import { TaskModel } from "../models/Task.js"; // nota para mi : a pesar de que ya relacione los modelos debo igual importar los modelos aca al tarer referencias con los endpoints
+import { CategoryModel } from "../models/Category.js";
 
 export const MESSAGES = {
   200: "La operación se realizó correctamente.",
@@ -49,12 +50,13 @@ export const crearUser = async (req, res) => {
 export const obtenerUsers = async (req, res) => {
   try {
     const users = await UserModel.findAll({
-      attributes:{
-        exclude: ["user_id", "password", "createdAt", "updateAt"]
+      attributes: {
+        exclude: ["user_id", "password", "createdAt", "updateAt"],
       },
       include: [
-        {model: TaskModel, as: "tarea"}
-      ]
+        { model: TaskModel, as: "tarea" ,
+          include: [{ model: CategoryModel, as: "categoria" }]
+        }      ],
     });
     return res.status(200).json(users);
   } catch (error) {
@@ -67,13 +69,25 @@ export const obtenerUsers = async (req, res) => {
 export const obtenerUser = async (req, res) => {
   try {
     const { id } = req.params;
-    const userEncontrado = await UserModel.findOne({ where: { id }, attributes:{ exclude:["user_id", "password", "createdAt", "updatedAt"] }, include: [{model: TaskModel, as: "tarea"}] });
+    const userEncontrado = await UserModel.findOne({
+      where: { id },
+      attributes: {
+        exclude: ["user_id", "password", "createdAt", "updatedAt"],
+      },
+      include: [
+        {
+          model: TaskModel,
+          as: "tarea",
+          include: [{ model: CategoryModel, as: "categoria" }],
+        },
+      ],
+    });
 
     if (!userEncontrado) return res.status(404).json(MESSAGES[404]);
 
-    return res.status(201).json(userEncontrado);
+    return res.status(200).json(userEncontrado);
   } catch (error) {
-    console.error(error)
+    console.error(error);
     return res.status(500).json(MESSAGES[500]);
   }
 };
@@ -82,7 +96,7 @@ export const obtenerUser = async (req, res) => {
 
 //esto debe ir con el metodo put
 
-export const updateUser = async (req,res) => {
+export const updateUser = async (req, res) => {
   try {
     const { id } = req.params;
     const filtroUser = await UserModel.findOne({ where: { id } });
@@ -99,33 +113,36 @@ export const updateUser = async (req,res) => {
       return res.status(400).json(MESSAGES[400]);
     }
 
-    const actualizarUser = await UserModel.update( {name,email,password}, {where: { id }})
+    const actualizarUser = await UserModel.update(
+      { name, email, password },
+      { where: { id } },
+    );
 
-    return res.status(200).json(actualizarUser)
-
+    return res.status(200).json(actualizarUser);
   } catch (error) {
-    console.error(error)
+    console.error(error);
     return res.status(500).json(MESSAGES[500]);
   }
 };
 
 //esto va con el metodo delete
-export const eliminarUser = async(req,res)=>{
-    try {
-        const { id } = req.params;
+export const eliminarUser = async (req, res) => {
+  try {
+    const { id } = req.params;
 
-        const usuarioAborrar = await UserModel.findOne(
-            {where: {id}}
-        )
+    const usuarioAborrar = await UserModel.findOne({ where: { id } });
 
-        if(!usuarioAborrar) return res.status(404).json(MESSAGES[404]);
+    if (!usuarioAborrar) return res.status(404).json(MESSAGES[404]);
 
-        await usuarioAborrar.destroy()
+    await usuarioAborrar.destroy();
 
-        return res.status(200).json({message:"SE BORRO EXITOSAMENTE EL USUARIO DE LA BASE DE DATOS"})
-
-    } catch (error) {
-      console.error(error);
-        return res.status(500).json(MESSAGES[500])
-    }
-}
+    return res
+      .status(200)
+      .json({
+        message: "SE BORRO EXITOSAMENTE EL USUARIO DE LA BASE DE DATOS",
+      });
+  } catch (error) {
+    console.error(error);
+    return res.status(500).json(MESSAGES[500]);
+  }
+};

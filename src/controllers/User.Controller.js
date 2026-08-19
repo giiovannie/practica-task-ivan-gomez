@@ -1,6 +1,7 @@
 import { UserModel } from "../models/User.js";
 import { TaskModel } from "../models/Task.js"; // nota para mi : a pesar de que ya relacione los modelos debo igual importar los modelos aca al tarer referencias con los endpoints
 import { CategoryModel } from "../models/Category.js";
+import { DireccionModel } from "../models/Direccion.js"
 
 export const MESSAGES = {
   200: "La operación se realizó correctamente.",
@@ -54,9 +55,18 @@ export const obtenerUsers = async (req, res) => {
         exclude: ["user_id", "password", "createdAt", "updateAt"],
       },
       include: [
-        { model: TaskModel, as: "tarea" ,
-          include: [{ model: CategoryModel, as: "categoria" }]
-        }      ],
+          {
+              model: TaskModel,
+              as: "tarea",
+              include:[{
+                model:CategoryModel,
+                as: "categoria"
+              }]
+          },
+          {
+              model: DireccionModel,
+              as: "ubicacion"
+          }]
     });
     return res.status(200).json(users);
   } catch (error) {
@@ -75,12 +85,19 @@ export const obtenerUser = async (req, res) => {
         exclude: ["user_id", "password", "createdAt", "updatedAt"],
       },
       include: [
-        {
-          model: TaskModel,
-          as: "tarea",
-          include: [{ model: CategoryModel, as: "categoria" }],
-        },
-      ],
+          {
+              model: TaskModel,
+              as: "tarea",
+              include:[{
+                model:CategoryModel,
+                as: "categoria"
+              }]
+          },
+          {
+              model: DireccionModel,
+              as: "ubicacion"
+          }
+      ]
     });
 
     if (!userEncontrado) return res.status(404).json(MESSAGES[404]);

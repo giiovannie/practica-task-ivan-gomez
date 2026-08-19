@@ -15,10 +15,6 @@ export const UserModel = sequelize.define("User",
         password: {
             type: DataTypes.STRING(100),
             allowNull: false
-        },
-        user_id:{
-            type: DataTypes.INTEGER,
-            allowNull: false,
         }
     }
 ) 

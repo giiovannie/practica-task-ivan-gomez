@@ -20,7 +20,7 @@ export const TaskModel = sequelize.define("Task",
             type: DataTypes.INTEGER,
             allowNull: false,
             references: {
-                model: "User",
+                model: "Users",
                 key: "id"
             }
         }

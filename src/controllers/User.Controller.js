@@ -2,6 +2,7 @@ import { UserModel } from "../models/User.js";
 import { TaskModel } from "../models/Task.js"; // nota para mi : a pesar de que ya relacione los modelos debo igual importar los modelos aca al tarer referencias con los endpoints
 import { CategoryModel } from "../models/Category.js";
 import { DireccionModel } from "../models/Direccion.js"
+import { matchedData } from "express-validator";
 
 export const MESSAGES = {
   200: "La operación se realizó correctamente.",

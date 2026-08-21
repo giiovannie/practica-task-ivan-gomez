@@ -14,32 +14,9 @@ export const MESSAGES = {
 // esto debe ir con /post
 export const crearUser = async (req, res) => {
   try {
-    const { name, email, password } = req.body;
-
-    // validacion para verifcar que no entre nada vacio :)
-    if (!name || !email || !password) {
-      return res.status(400).json(MESSAGES[400]);
-    }
-    // validacion para el control de caracteres maximo de 100
-    if (name.length > 100 || email.length > 100 || password.length > 100) {
-      return res.status(400).json(MESSAGES[400]);
-    }
-    const coincidencias = await UserModel.findOne({
-      where: { email },
-    });
-    //validacion para verificar si existe concidencias antes de agregar algo
-    if (coincidencias) {
-      return res
-        .status(400)
-        .json({ messages: `el correo electronico ingresado "YA EXISTE"` });
-    }
-
-    const userNuevo = await UserModel.create({
-      name,
-      email,
-      password,
-    });
-    return res.status(201).json(userNuevo);
+      const data = matchedData(req);
+      const user = await UserModel.create(data)
+    return res.status(201).json(user);
   } catch (error) {
     console.error(error);
     res.status(500).json(MESSAGES[500]);

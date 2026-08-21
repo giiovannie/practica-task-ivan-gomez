@@ -1,5 +1,5 @@
 //vine pimero aca :)
-import { body } from "express-validator";
+import { body, param } from "express-validator";
 
 export const validationsUser = [
     body("email")
@@ -11,4 +11,23 @@ export const validationsUser = [
     body("password")
         .notEmpty().withMessage("la contraseña esta vacia(no debe estarlo)")
         .isLength({min: 8}).withMessage("la contraseña o tiene un minimo de 8 caracteres")
+]
+
+export const validatorUpdatedUser = [
+    param("id")
+        .isInt().withMessage("el id no es del tipo numerico")
+        .notEmpty().withMessage("el id esta vacio"),
+    body("name")
+        .optional()
+        .isString().withMessage("el nombre no es un string")
+        .isLength({min: 3}).withMessage("el nombre no cumple con lo minimo de caracter")
+        .notEmpty().withMessage("el nombre esta vacio"),
+    body("email")
+        .optional()
+        .isEmail().withMessage("el email es invalido")
+        .notEmpty().withMessage("el email esta vacio"),
+    body("password")
+        .optional()
+        .notEmpty().withMessage("la contraseña esta vacia")
+        .isLength({min: 8}).withMessage("la contraseña no tiene el minimo de 8 caracteres")
 ]

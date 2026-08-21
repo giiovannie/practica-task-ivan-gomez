@@ -3,7 +3,7 @@
 import { validationResult } from "express-validator";
 
 //nota : validationResult(req) es sincrono
-export const validate = async (req,res,next)=>{
+export const validate =  (req,res,next)=>{
     const errors = validationResult(req);
 
     if(!errors.isEmpty()){

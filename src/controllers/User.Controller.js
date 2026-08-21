@@ -2,7 +2,7 @@ import { UserModel } from "../models/User.js";
 import { TaskModel } from "../models/Task.js"; // nota para mi : a pesar de que ya relacione los modelos debo igual importar los modelos aca al tarer referencias con los endpoints
 import { CategoryModel } from "../models/Category.js";
 import { DireccionModel } from "../models/Direccion.js"
-import { matchedData } from "express-validator";
+import { matchedData, param } from "express-validator";
 
 export const MESSAGES = {
   200: "La operación se realizó correctamente.",
@@ -93,27 +93,20 @@ export const obtenerUser = async (req, res) => {
 
 export const updateUser = async (req, res) => {
   try {
-    const { id } = req.params;
-    const filtroUser = await UserModel.findOne({ where: { id } });
+    const {id, ...datos} = matchedData(req)
 
-    if (!filtroUser) return res.status(404).json(MESSAGES[404]);
+    const user = await UserModel.findByPk(id)
 
-    const { name, email, password } = req.body;
-
-    if (!name || !email || !password) {
-      return res.status(400).json(MESSAGES[400]);
+    if(!user){
+      return res.status(400).json({message: "no existe o no se encontro el usuario"})
     }
 
-    if (name.length > 100 || email.length > 100 || password.length > 100) {
-      return res.status(400).json(MESSAGES[400]);
-    }
+    await user.update(datos);
 
-    const actualizarUser = await UserModel.update(
-      { name, email, password },
-      { where: { id } },
-    );
-
-    return res.status(200).json(actualizarUser);
+    return res.status(200).json({
+      message: "user actualizado",
+      user
+    });
   } catch (error) {
     console.error(error);
     return res.status(500).json(MESSAGES[500]);

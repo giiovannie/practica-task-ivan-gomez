@@ -31,3 +31,10 @@ export const validatorUpdatedUser = [
         .notEmpty().withMessage("la contraseña esta vacia")
         .isLength({min: 8}).withMessage("la contraseña no tiene el minimo de 8 caracteres")
 ]
+
+//este validador lo va a ocupar el getbyid y el delete porque ambos por ahora nesecitan validar el id que viene de param
+export const validatorUserById = [
+        param("id")
+            .notEmpty().withMessage("el id esta vacio")
+            .isInt().withMessage("el id no es del tipo entero")
+]

@@ -1,12 +1,10 @@
 import { Router } from "express";
-import { crearUser, eliminarUser, obtenerUser, obtenerUsers, updateUser } from "../controllers/user.Controller.js";
-import { validationsUser, validatorUpdatedUser } from "../middlewares/validaciones/user-validations.js";
-import { validate } from "../middlewares/validate.js";
-import { matchedData } from "express-validator";//importantye de que aca tambien se debe de importar
-export const UserRoutes = Router();
+import { crearUser, eliminarUser, obtenerUser, obtenerUsers, updateUser } from "../controllers/User.Controller.js";
+import { validationsUser, validatorUpdatedUser, validatorUserById } from "../middlewares/validaciones/user-validations.js";
+import { validate } from "../middlewares/validate.js";export const UserRoutes = Router();
 
 UserRoutes.post("/", validationsUser, validate , crearUser); // esto junta dos validadores y un contorller
 UserRoutes.get("/", obtenerUsers);
-UserRoutes.get("/:id", obtenerUser); //esto esta en singular >>> no confundir <<<
+UserRoutes.get("/:id",validatorUserById ,validate ,obtenerUser); //esto esta en singular >>> no confundir <<<
 UserRoutes.put("/:id",validatorUpdatedUser, validate ,updateUser);
-UserRoutes.delete("/:id", eliminarUser);
+UserRoutes.delete("/:id",validatorUserById,validate, eliminarUser);

@@ -116,9 +116,8 @@ export const updateUser = async (req, res) => {
 //esto va con el metodo delete
 export const eliminarUser = async (req, res) => {
   try {
-    const { id } = req.params;
-
-    const usuarioAborrar = await UserModel.findOne({ where: { id } });
+    const { id } = matchedData(req)
+    const usuarioAborrar = await UserModel.findOne({where: { id }});
 
     if (!usuarioAborrar) return res.status(404).json(MESSAGES[404]);
 

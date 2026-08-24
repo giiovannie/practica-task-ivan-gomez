@@ -1,10 +1,16 @@
 //vine pimero aca :)
 import { body, param } from "express-validator";
+import { UserModel } from "../../models/User";
 
 export const validationsUser = [
     body("email")
         .notEmpty().withMessage('El campo del email esta vacio')
-        .isEmail().withMessage('el email debe de ser valido :/'),
+        .isEmail().withMessage('el email debe de ser valido :/')
+        .bail(async(email)=>{
+            const user = await UserModel.findOne({ where: { email } });
+            if (user) throw new Error("el email ya esta registrado");
+            return true;
+        }),
     body("name")
         .notEmpty().withMessage("el nombre esta vacio")
         .isLength({ min: 3}).withMessage("el nombre no cumple con lo requerido"),
@@ -37,4 +43,10 @@ export const validatorUserById = [
         param("id")
             .notEmpty().withMessage("el id esta vacio")
             .isInt().withMessage("el id no es del tipo entero")
+            .bail() //nota para mi: esto hace que si lo de arriba falla no se sega con el custmo asi se evita una consulta inutil a la bd
+            .custom(async (id)=>{
+                const user = await UserModel.findByPk(id)
+                if (!user) throw new Error("el usuario no existe");
+                return true
+            })
 ]

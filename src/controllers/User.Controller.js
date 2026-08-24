@@ -56,7 +56,7 @@ export const obtenerUsers = async (req, res) => {
 //esto tambien va con el metodo get pero con la id en la ruta
 export const obtenerUser = async (req, res) => {
   try {
-    const { id } = req.params;
+    const { id } = matchedData(req);
     const userEncontrado = await UserModel.findOne({
       where: { id },
       attributes: {
@@ -78,8 +78,6 @@ export const obtenerUser = async (req, res) => {
       ]
     });
 
-    if (!userEncontrado) return res.status(404).json(MESSAGES[404]);
-
     return res.status(200).json(userEncontrado);
   } catch (error) {
     console.error(error);
@@ -94,19 +92,10 @@ export const obtenerUser = async (req, res) => {
 export const updateUser = async (req, res) => {
   try {
     const {id, ...datos} = matchedData(req)
-
     const user = await UserModel.findByPk(id)
 
-    if(!user){
-      return res.status(400).json({message: "no existe o no se encontro el usuario"})
-    }
-
-    await user.update(datos);
-
-    return res.status(200).json({
-      message: "user actualizado",
-      user
-    });
+    await user.update(datos)
+    return res.status(200).json({message: "user actualizado",user});
   } catch (error) {
     console.error(error);
     return res.status(500).json(MESSAGES[500]);
@@ -119,15 +108,8 @@ export const eliminarUser = async (req, res) => {
     const { id } = matchedData(req)
     const usuarioAborrar = await UserModel.findOne({where: { id }});
 
-    if (!usuarioAborrar) return res.status(404).json(MESSAGES[404]);
-
     await usuarioAborrar.destroy();
-
-    return res
-      .status(200)
-      .json({
-        message: "SE BORRO EXITOSAMENTE EL USUARIO DE LA BASE DE DATOS",
-      });
+    return res.status(200).json({message: "SE BORRO EXITOSAMENTE EL USUARIO DE LA BASE DE DATOS",});
   } catch (error) {
     console.error(error);
     return res.status(500).json(MESSAGES[500]);

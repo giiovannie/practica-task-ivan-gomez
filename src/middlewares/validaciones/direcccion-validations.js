@@ -1,4 +1,6 @@
 import { body, param } from "express-validator";
+import { DireccionModel } from "../../models/Direccion";
+import { UserModel } from "../../models/User";
 
 export const validatorInsertDireccion = [
     body("calle")
@@ -23,12 +25,24 @@ export const validatorInsertDireccion = [
     body("user_id")
         .notEmpty().withMessage("el campo del id del usuario no debe estar vacio")
         .isInt({ min: 1 }).withMessage("el id del user debe ser un entero positivo")
+        .bail()
+        .custom(async (user_id) => {
+            const user = await UserModel.findByPk(user_id);
+            if (!user) throw new Error("el usuario no existe");
+            return true;
+        })
 ];
 
 export const validatorUpdateDireccion = [
     param("id")
         .notEmpty().withMessage("el id esta vacio")
-        .isInt({ min: 1 }).withMessage("el id debe ser un entero positivo"),
+        .isInt({ min: 1 }).withMessage("el id debe ser un entero positivo")
+        .bail()
+        .custom(async (id) => {
+            const direccion = await DireccionModel.findByPk(id);
+            if (!direccion) throw new Error("la direccion no existe");
+            return true;
+        }),
     body("calle")
         .optional()
         .isString().withMessage("el campo de calle no es del tipo string")
@@ -51,12 +65,23 @@ export const validatorUpdateDireccion = [
     body("user_id")
         .optional()
         .isInt({ min: 1 }).withMessage("el id del user debe ser un entero positivo")
-
+        .bail()
+        .custom(async (user_id) => {
+            const user = await UserModel.findByPk(user_id);
+            if (!user) throw new Error("el usuario no existe");
+            return true;
+        })
 ];
 
 export const validatorDireccionById = [
     param("id")
         .notEmpty().withMessage("el id esta vacio")
         .isInt({ min: 1 }).withMessage("el id debe ser un entero positivo")
+        .bail()
+        .custom(async (id) => {
+            const direccion = await DireccionModel.findByPk(id);
+            if (!direccion) throw new Error("la direccion no existe");
+            return true;
+        })
 
 ];

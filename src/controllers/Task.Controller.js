@@ -63,8 +63,6 @@ export const mostrarTarea = async (req,res) => {
         }
         )
 
-        if(!tareaEncontrada) return res.status(404).json(MESSAGES[404])
-
         return res.status(200).json(tareaEncontrada)
     } catch (error) {
         console.error(error);
@@ -77,12 +75,8 @@ export const actualizarTarea = async (req, res) => {
         const { id, ...datos }  = matchedData(req);
         const tareaEncontrada = await TaskModel.findByPk(id);
 
-        if (!tareaEncontrada) return res.status(404).json(MESSAGES[404]);
-
         await tareaEncontrada.update(datos);
-
         return res.status(200).json(tareaEncontrada);
-
     } catch (error) {
         console.error(error);
         return res.status(500).json(MESSAGES[500]);
@@ -94,11 +88,8 @@ export const eliminarTarea = async (req, res) => {
         const { id } = matchedData(req);
         const tareaEncontrada = await TaskModel.findByPk(id);
 
-        if (!tareaEncontrada) return res.status(404).json(MESSAGES[404]);
-
         await tareaEncontrada.destroy();
         return res.status(200).json({ message: "Tarea eliminada exitosamente." });
-
     } catch (error) {
         console.error(error);
         return res.status(500).json(MESSAGES[500]);

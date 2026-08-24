@@ -28,10 +28,7 @@ export const asignarCategoriaATarea = async (req, res) => {
         const { task_id, category_id } = matchedData(req);
 
         const tarea = await TaskModel.findByPk(task_id);
-        if (!tarea) {return res.status(404).json({message: "la tarea no existe"});}
-
         const categoria = await CategoryModel.findByPk(category_id);
-        if (!categoria) {return res.status(404).json({message: "la categoria no existe"});}
         
         await tarea.addCategoria(categoria);
         return res.status(200).json({message: "categoria asignada a la tarea correctamente"});
@@ -44,13 +41,8 @@ export const asignarCategoriaATarea = async (req, res) => {
 export const quitarCategoriaDeTarea = async (req, res) => {
     try {
         const { task_id, category_id } = matchedData(req);
-
         const tarea = await TaskModel.findByPk(task_id);
-        if (!tarea) return res.status(404).json({ message: "la tarea no existe" });
-
         const categoria = await CategoryModel.findByPk(category_id);
-        if (!categoria) return res.status(404).json({ message: "la categoria no existe" });
-        
         await tarea.removeCategoria(categoria);
         return res.status(200).json({ message: "categoria eliminada de la tarea correctamente" });
     } catch (error) {

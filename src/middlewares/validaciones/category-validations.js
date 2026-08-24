@@ -1,10 +1,18 @@
 import { body, param } from "express-validator";
+import { TaskModel } from "../../models/Task";
+import { CategoryModel } from "../../models/Category";
 
 export const validatorCategoryInsert = [
     body("name")
         .notEmpty().withMessage("el nombre esta vacio")
         .isString().withMessage("el nombre debe ser un string")
-        .isLength({ max: 100 }).withMessage("el nombre no puede superar los 100 caracteres"),
+        .isLength({ max: 100 }).withMessage("el nombre no puede superar los 100 caracteres")
+        .bail()
+        .custom(async (name) => {
+        const category = await CategoryModel.findOne({ where: { name } });
+        if (category) throw new Error("ya existe una categoria con ese nombre");
+        return true;
+        }),
     body("description")
         .notEmpty().withMessage("la descripcion no puede estar vacia")
         .isString().withMessage("la descripcion no es del tipo string")
@@ -21,11 +29,23 @@ export const validatorCategoryInsert = [
 export const validationUpdateCategory = [
     param("id")
         .notEmpty().withMessage("el id esta vacio")
-        .isInt({ min: 1 }).withMessage("el id debe ser entero positivo"),
+        .isInt({ min: 1 }).withMessage("el id debe ser entero positivo")
+        .bail()
+        .custom(async (id) => {
+            const category = await CategoryModel.findByPk(id);
+            if (!category) throw new Error("la categoria no existe");
+            return true;
+        }),
     body("name")
         .optional()
         .isString().withMessage("el campo de nombre debe ser del tipo string")
-        .isLength({ max: 100 }).withMessage("el campo de nombre es mayor a los 100 caracteres permitidos"),
+        .isLength({ max: 100 }).withMessage("el campo de nombre es mayor a los 100 caracteres permitidos")
+        .bail()
+        .custom(async (name, { req }) => {
+            const category = await CategoryModel.findOne({ where: { name } });
+            if (category && category.id !== Number(req.params.id)) throw new Error("ya existe otra categoria con ese nombre");
+            return true;
+        }),
     body("description")
         .optional()
         .isString().withMessage("el campo de descripcion debe ser del tipo string")
@@ -42,4 +62,10 @@ export const validationGetCategoryById = [
     param("id")
         .notEmpty().withMessage("el id esta vacio")
         .isInt({min: 1}).withMessage("el id debe ser del tipo entero y/o positivo")
+        .bail()
+        .custom(async (id) => {
+            const category = await CategoryModel.findByPk(id);
+            if (!category) throw new Error("la categoria no existe");
+            return true;
+        })
 ]

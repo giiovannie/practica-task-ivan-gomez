@@ -38,7 +38,6 @@ export const validationUpdateCategory = [
         .isInt({ min: 0 }).withMessage("la prioridad debe ser un entero mayor o igual a 0")
 ];
 
-
 export const validationGetCategoryById = [
     param("id")
         .notEmpty().withMessage("el id esta vacio")

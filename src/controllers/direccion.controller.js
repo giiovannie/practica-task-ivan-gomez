@@ -1,6 +1,7 @@
 import { DireccionModel } from "../models/Direccion.js";
 import { MESSAGES } from "./User.Controller.js";
 import { UserModel } from "../models/User.js";
+import { matchedData } from "express-validator";
 
 export const getAllWays = async (req,res)=>{
     try {
@@ -22,7 +23,7 @@ export const getAllWays = async (req,res)=>{
 
 export const getAlWaysId = async (req,res)=>{
     try {
-        const { id } = req.params;
+        const { id } = matchedData(req);
 
         const tarerDireccion = await DireccionModel.findOne(
             {
@@ -36,6 +37,8 @@ export const getAlWaysId = async (req,res)=>{
             }
         )
 
+        if (!tarerDireccion) return res.status(404).json(MESSAGES[404]);
+
         return res.status(200).json(tarerDireccion);
     } catch (error) {
         console.error(error);
@@ -43,33 +46,46 @@ export const getAlWaysId = async (req,res)=>{
     }
 }
 
-export const crearireccion = async (req,res)=>{
+export const crearDireccion = async (req,res)=>{
     try {
-        const { calle, ciudad, provincia, pais, cod_postal, user_id } = req.body;
+        const data  = matchedData(req);
+        const nuevaDireccion = await DireccionModel.create(data)
 
-        if(!calle || !ciudad || !provincia || !pais || !cod_postal || !user_id ){
-            return res.status(400).json(MESSAGES[400]);
-        }
-
-        if(typeof calle !== "string" || typeof ciudad !== "string" || typeof provincia !== "string" || typeof pais !== "string" || typeof cod_postal !== "number" || typeof user_id !== "number"){
-            return res.status(400).json(MESSAGES[400])
-        }
-
-        const nuevaDireccion = await DireccionModel.create({
-            calle,
-            pais,
-            ciudad,
-            cod_postal,
-            user_id,
-            provincia
-        })
-
-        const usuarioExiste = await UserModel.findOne({ where: { id: user_id } });
+        const usuarioExiste = await UserModel.findByPk(data.user_id)
         if (!usuarioExiste) return res.status(404).json({ message: "El usuario no existe." });
 
         return res.status(201).json(nuevaDireccion)
     } catch (error) {
         console.error(error);
         res.status(500).json(MESSAGES[500])
+    }
+}
+
+export const deleteDireccion = async (req,res)=>{
+    try {
+        const { id } = matchedData(req);
+        const direccion = await DireccionModel.findByPk(id)
+        if (!direccion) return res.status(404).json(MESSAGES[404]);
+        await direccion.destroy()
+        return res.status(200).json({
+            message: "se borro exitosamente la direccion ligada al usuario"
+        });
+    } catch (error) {
+        console.error(error);
+        return res.status(500).json(MESSAGES[500]);
+    }
+};
+
+
+export const updateDireccion = async (req,res)=>{
+    try {
+        const data = matchedData(req)
+        const direccion = await DireccionModel.findByPk(data.id)
+        if(!direccion) return res.status(404).json(MESSAGES[404])
+        await direccion.update(data)
+        return res.status(200).json(direccion)
+    } catch (error) {
+        console.error(error);
+        return res.status(500).json(MESSAGES[500])
     }
 }

@@ -1,6 +1,6 @@
 //vine pimero aca :)
 import { body, param } from "express-validator";
-import { UserModel } from "../../models/User";
+import { UserModel } from "../../models/User.js";
 
 export const validationsUser = [
     body("email")

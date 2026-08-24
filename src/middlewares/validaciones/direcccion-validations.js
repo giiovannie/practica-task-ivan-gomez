@@ -1,6 +1,6 @@
 import { body, param } from "express-validator";
-import { DireccionModel } from "../../models/Direccion";
-import { UserModel } from "../../models/User";
+import { DireccionModel } from "../../models/Direccion.js";
+import { UserModel } from "../../models/User.js";
 
 export const validatorInsertDireccion = [
     body("calle")

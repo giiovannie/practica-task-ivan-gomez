@@ -1,6 +1,6 @@
 import { body, param } from "express-validator";
-import { TaskModel } from "../../models/Task";
-import { CategoryModel } from "../../models/Category";
+import { TaskModel } from "../../models/Task.js";
+import { CategoryModel } from "../../models/Category.js";
 
 export const validatorCategoryInsert = [
     body("name")

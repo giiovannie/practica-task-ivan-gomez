@@ -1,7 +1,5 @@
 import { body, param } from "express-validator";
 
-import { body, param } from "express-validator";
-
 export const validatorInsertDireccion = [
     body("calle")
         .notEmpty().withMessage("el campo de calle esta vacio")

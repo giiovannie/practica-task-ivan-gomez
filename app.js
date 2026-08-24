@@ -7,6 +7,7 @@ import { CategoryRouter } from "./src/routes/category.routes.js";
 import "./src/models/index.js";
 
 import dotenv from "dotenv";
+import { taskCategoryRouter } from "./src/routes/task_category.routes.js";
 dotenv.config();
 
 const app = express();
@@ -14,6 +15,8 @@ const app = express();
 app.use(express.json());
 app.use("/api/users", UserRoutes)
 app.use("/api/tasks", TaskRouter)
+
+app.use("/api/task_category/", taskCategoryRouter)
 
 app.use("/api/direcciones", direccionRoutes)
 app.use("/api/categories", CategoryRouter)

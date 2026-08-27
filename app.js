@@ -16,7 +16,7 @@ app.use(express.json());
 app.use("/api/users", UserRoutes)
 app.use("/api/tasks", TaskRouter)
 
-app.use("/api/task_category/", taskCategoryRouter)
+app.use("/api/task_category", taskCategoryRouter)
 
 app.use("/api/direcciones", direccionRoutes)
 app.use("/api/categories", CategoryRouter)

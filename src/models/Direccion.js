@@ -37,5 +37,9 @@ export const DireccionModel = sequelize.define("Direccion",
                 key: "id"
             }
         }
+    },{
+        paranoid:true,
+        timestamps: true
     }
+
 )

@@ -24,6 +24,10 @@ export const TaskModel = sequelize.define("Task",
                 key: "id"
             }
         }
+    },
+    {
+        timestamps: true,
+        paranoid: true
     }
 ) 
 

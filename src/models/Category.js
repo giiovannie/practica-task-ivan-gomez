@@ -18,5 +18,10 @@ export const CategoryModel = sequelize.define("Category", {
     priority: {
         type: DataTypes.INTEGER,
         allowNull: false
+    },
+    },
+    {
+        paranoid:true,
+        timestamps: true
     }
-});
+);

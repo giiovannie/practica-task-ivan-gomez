@@ -12,5 +12,9 @@ export const TaskCategoryModel = sequelize.define(
             allowNull: false,
             autoIncrement: true,
         }
+    },
+    {
+        timestamps: true,
+        timestamps: true
     }
 ) 

@@ -51,3 +51,16 @@ export const quitarCategoriaDeTarea = async (req, res) => {
     }
 };
 
+export const updateCategoriadeTarea = async (req,res)=>{
+    try {
+        const {task_id, category_id} = matchedData(req);
+        const tarea = await TaskModel.findByPk(task_id);
+        const category = await CategoryModel.findByPk(category_id);
+
+        await tarea.update(category)
+        return res.status(200).json({ message: "se actualizo y asigno una categoria de la tarea correctamente" });
+    } catch (error) {
+        console.error(error);
+        return res.status(500).json(MESSAGES[500]);
+    }
+}
